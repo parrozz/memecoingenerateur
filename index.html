@@ -1,360 +1,458 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Token Builder – local & simple</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CoinFast‑like | Créateur de Memecoin (Solana)</title>
+  <!-- Minimal styles (no build step needed) -->
   <style>
-    :root{
-      --bg:#0b0f17; --panel:#121826; --edge:#1b2336; --text:#e6ebff; --muted:#9fb0d7; --acc:#6aa6ff; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
-    }
-    *{box-sizing:border-box} body{margin:0;background:linear-gradient(160deg,#0b0f17,#0d1220);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;}
-    .wrap{max-width:1100px;margin:32px auto;padding:0 16px}
-    .hero{display:flex;gap:18px;align-items:center;margin-bottom:18px}
-    .logo{width:38px;height:38px;border-radius:12px;background:conic-gradient(from 210deg,#6aa6ff,#7cf2f7,#7af79a,#6aa6ff);}
-    h1{font-size:22px;margin:0}
-    .card{background:var(--panel);border:1px solid var(--edge);border-radius:18px;padding:18px}
+    :root{--bg:#0b0f14;--panel:#10161f;--muted:#7d8b9b;--ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--ink:#cbd5e1;--link:#60a5fa}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:#e5e7eb;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    header{padding:20px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid #1f2937;background:linear-gradient(180deg,#0f172a,transparent)}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{width:32px;height:32px;border-radius:8px;background:#1f2937;display:grid;place-items:center;font-weight:700}
+    h1{font-size:18px;margin:0}
+    main{max-width:1100px;margin:0 auto;padding:24px}
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
-    @media(min-width:900px){.grid{grid-template-columns: 580px 1fr}}
-    label{font-size:12px;color:var(--muted);display:block;margin:8px 0 6px}
-    input,select,textarea{width:100%;padding:12px 13px;border-radius:12px;border:1px solid #26304a;background:#0f1524;color:var(--text);outline:none}
-    textarea{min-height:72px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid #2a3452;background:#16203a;color:#fff;cursor:pointer;font-weight:600}
-    .btn.primary{background:linear-gradient(160deg,#3b82f6,#22d3ee);border-color:#2b5fcc}
-    .btn.success{background:linear-gradient(160deg,#22c55e,#06b6d4);border-color:#19994c}
-    .btn.warning{background:linear-gradient(160deg,#f59e0b,#ef4444);border-color:#c47b08}
-    .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{padding:6px 10px;border:1px solid #2a3452;background:#0f1524;border-radius:999px;font-size:12px;color:var(--muted)}
-    .out{white-space:pre-wrap;background:#0a1222;border:1px dashed #273153;border-radius:14px;padding:14px;color:#d8e4ff;min-height:80px}
+    @media (min-width:980px){.grid{grid-template-columns:380px 1fr}}
+    .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:16px}
+    .card h2{margin:0 0 8px;font-size:16px}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input,select,textarea{width:100%;background:#0b1220;border:1px solid #1f2937;border-radius:12px;padding:10px 12px;color:#e5e7eb;outline:none}
+    input::placeholder{color:#475569}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn{appearance:none;border:1px solid #303b4b;background:#0b1220;color:#e5e7eb;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,#2563eb,#1d4ed8);border-color:#1d4ed8}
+    .btn.ghost{background:transparent}
+    .btn.warn{background:#3a2a00;border-color:#f59e0b;color:#ffd580}
+    .btn.ok{background:#0b2a19;border-color:#16a34a;color:#b7f7c0}
     .muted{color:var(--muted)}
-    a{color:#9cc7ff;text-decoration:none}
-    .kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-    .kpi>div{background:#0f1628;border:1px solid #273153;border-radius:12px;padding:10px;text-align:center}
-    .hint{font-size:12px;color:var(--muted)}
-    .danger{color:var(--err)}
-    .dropzone{border:1px dashed #2a3a62;background:#0d1529;border-radius:12px;padding:14px;height:120px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);cursor:pointer}
-    .dropzone.has-file{border-color:#22c55e;color:#dfffe8;background:#0e1b2d}
+    .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .switch{display:inline-flex;gap:8px;align-items:center}
+    .switch input{width:auto}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .log{background:#070b12;border:1px solid #111827;border-radius:12px;padding:10px;min-height:140px;max-height:260px;overflow:auto;white-space:pre-wrap}
+    .pill{padding:3px 8px;border:1px solid #334155;border-radius:999px;font-size:12px}
+    .hr{height:1px;background:#1f2937;margin:8px 0}
+    a{color:var(--link);text-decoration:none}
+    .foot{font-size:12px;color:#94a3b8}
   </style>
+  <!-- ESM CDN imports: web3 + spl-token (no bundler needed) -->
+  <script type="module">
+    import {
+      Connection, clusterApiUrl, PublicKey, SystemProgram, Transaction, Keypair, LAMPORTS_PER_SOL
+    } from "https://esm.sh/@solana/web3.js@1.95.3";
+
+    import {
+      MINT_SIZE,
+      getMinimumBalanceForRentExemptMint,
+      createInitializeMintInstruction,
+      getAssociatedTokenAddress,
+      createAssociatedTokenAccountInstruction,
+      createMintToInstruction,
+      createSetAuthorityInstruction,
+      AuthorityType
+    } from "https://esm.sh/@solana/spl-token@0.4.7";
+
+    // ---- Module-scope state (filled after DOM ready)
+    let els = {};
+    let wallet = null; // provider
+    let connection = null;
+    let lastMintPk = null;
+
+    function log(msg, type='info'){
+      if(!els.log) return;
+      const t = new Date().toLocaleTimeString();
+      const tag = type==='ok'?'✅':type==='warn'?'⚠️':type==='err'?'🛑':'•';
+      els.log.textContent += `[${t}] ${tag} ${msg}
+`;
+      els.log.scrollTop = els.log.scrollHeight;
+    }
+
+    function setConnection() {
+      const network = els.net?.value || 'devnet';
+      const rpc = els.rpc?.value?.trim?.() || clusterApiUrl(network);
+      connection = new Connection(rpc, {commitment:'confirmed'});
+      log(`RPC → ${rpc}`);
+    }
+
+    async function refreshBalance(){
+      try{
+        if(!wallet?.publicKey || !connection) return;
+        const lamports = await connection.getBalance(wallet.publicKey);
+        els.balance.textContent = (lamports / LAMPORTS_PER_SOL).toFixed(4) + ' SOL';
+      }catch(e){ log('Balance error: '+(e.message||e), 'warn'); }
+    }
+
+    // ---- Wallet detection helper
+    function detectWallet(){
+      const w = (window.solana && (window.solana.isPhantom || window.solana.isBackpack)) ? window.solana
+              : (window.phantom?.solana ? window.phantom.solana : null);
+      return w;
+    }
+
+    async function connect(){
+      try{
+        wallet = detectWallet();
+        if(!wallet){
+          log('Aucun wallet détecté. Installe Phantom et recharge la page.', 'warn');
+          alert('Aucun wallet Solana détecté. Installe Phantom (phantom.app) et recharge la page.');
+          return;
+        }
+        // trigger connect prompt from a user gesture
+        if(!wallet.isConnected){
+          await wallet.connect({ onlyIfTrusted:false });
+        }
+        els.addr.textContent = wallet.publicKey.toString();
+        els.connectBtn.style.display='none';
+        els.disconnectBtn.style.display='inline-flex';
+        setConnection();
+        await refreshBalance();
+        log('Wallet connecté.');
+      }catch(e){
+        log('Connexion wallet échouée: '+(e.message||e), 'err');
+      }
+    }
+
+    async function disconnect(){
+      try{ await wallet?.disconnect?.(); }catch{}
+      wallet = null;
+      els.addr.textContent = '-';
+      els.balance.textContent = '-';
+      els.connectBtn.style.display='inline-flex';
+      els.disconnectBtn.style.display='none';
+      log('Wallet déconnecté.');
+    }
+
+    const BN10 = (n)=> BigInt(n);
+    function toBaseUnits(amountStr, decimals){
+      const [intp, fracp=''] = String(amountStr).split('.');
+      const safeFrac = (fracp + '0'.repeat(decimals)).slice(0, decimals);
+      return BN10(intp) * BN10(10)**BN10(decimals) + BN10(safeFrac || 0);
+    }
+
+    async function simulateTx(tx){
+      try{
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+        tx.feePayer = wallet.publicKey;
+        const sim = await connection.simulateTransaction(tx, {sigVerify:false});
+        if(sim.value.err){
+          log('Simulation: ECHEC → '+JSON.stringify(sim.value.err), 'warn');
+        }else{
+          log('Simulation: OK. unités compute ≈ '+sim.value.unitsConsumed, 'ok');
+        }
+      }catch(e){ log('Simulation error: '+(e.message||e), 'warn'); }
+    }
+
+    async function signAndSend(tx, extraSigners=[]) {
+      tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+      tx.feePayer = wallet.publicKey;
+      if(extraSigners.length) tx.partialSign(...extraSigners);
+      if(typeof wallet.signAndSendTransaction === 'function'){
+        const { signature } = await wallet.signAndSendTransaction(tx);
+        log('Signature: '+signature);
+        await connection.confirmTransaction(signature, 'confirmed');
+        return signature;
+      } else if(typeof wallet.signTransaction === 'function'){
+        const signed = await wallet.signTransaction(tx);
+        const sig = await connection.sendRawTransaction(signed.serialize());
+        log('Signature: '+sig);
+        await connection.confirmTransaction(sig, 'confirmed');
+        return sig;
+      } else {
+        throw new Error('Wallet ne supporte pas signTransaction.');
+      }
+    }
+
+    async function createMintFlow(ev){
+      ev?.preventDefault?.();
+      if(!wallet?.publicKey) return alert('Connecte ton wallet.');
+      setConnection();
+
+      const decimals = parseInt(els.decimals.value || '6', 10);
+      const supplyStr = els.supply.value.trim();
+      const setFreeze = els.freeze.checked;
+
+      if(!supplyStr) return alert('Renseigne un total supply.');
+      if(decimals<0 || decimals>9) return alert('Décimales entre 0 et 9.');
+
+      try{
+        log('Préparation de la création du mint…');
+        const mintKp = Keypair.generate();
+        const mintPk = mintKp.publicKey;
+
+        const rent = await getMinimumBalanceForRentExemptMint(connection);
+        const createMintIx = SystemProgram.createAccount({
+          fromPubkey: wallet.publicKey,
+          newAccountPubkey: mintPk,
+          space: MINT_SIZE,
+          lamports: rent,
+          programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
+        });
+
+        const initMintIx = createInitializeMintInstruction(
+          mintPk,
+          decimals,
+          wallet.publicKey, // mint authority
+          setFreeze ? wallet.publicKey : null // freeze authority
+        );
+
+        const ata = await getAssociatedTokenAddress(
+          mintPk,
+          wallet.publicKey,
+        );
+        const createAtaIx = createAssociatedTokenAccountInstruction(
+          wallet.publicKey,
+          ata,
+          wallet.publicKey,
+          mintPk
+        );
+
+        const amount = toBaseUnits(supplyStr, decimals);
+        const mintToIx = createMintToInstruction(
+          mintPk,
+          ata,
+          wallet.publicKey,
+          amount
+        );
+
+        const tx1 = new Transaction().add(createMintIx, initMintIx, createAtaIx, mintToIx);
+        await simulateTx(tx1);
+        await signAndSend(tx1, [mintKp]);
+        log('Mint créé: '+mintPk.toString(), 'ok');
+
+        lastMintPk = mintPk;
+        els.lastMint.textContent = mintPk.toString();
+        els.dexScreenerLink.href = `https://dexscreener.com/solana/${mintPk.toString()}`;
+        els.raydiumLink.href = `https://raydium.io/liquidity/`;
+
+        const renounceList = [];
+        if(els.renounceMint.checked){
+          renounceList.push(createSetAuthorityInstruction(mintPk, wallet.publicKey, AuthorityType.MintTokens, null));
+        }
+        if(els.renounceFreeze.checked && setFreeze){
+          renounceList.push(createSetAuthorityInstruction(mintPk, wallet.publicKey, AuthorityType.FreezeAccount, null));
+        }
+        if(renounceList.length){
+          const tx2 = new Transaction().add(...renounceList);
+          await simulateTx(tx2);
+          await signAndSend(tx2);
+          log('Autorités renoncées selon options cochées.', 'ok');
+        }
+
+        await refreshBalance();
+        log('Terminé. Tu peux maintenant créer une pool sur Raydium en utilisant ce mint.');
+      }catch(e){
+        console.error(e);
+        log('Echec: '+(e.message||e), 'err');
+      }
+    }
+
+    function wireEvents(){
+      els.connectBtn?.addEventListener('click', connect);
+      els.disconnectBtn?.addEventListener('click', disconnect);
+      els.net?.addEventListener('change', setConnection);
+      els.rpc?.addEventListener('change', setConnection);
+      els.form?.addEventListener('submit', createMintFlow);
+      els.createBtn?.addEventListener('click', createMintFlow);
+      els.simulate?.addEventListener('click', async ()=>{
+        if(!wallet?.publicKey) return alert('Connecte ton wallet.');
+        setConnection();
+        const mintKp = Keypair.generate();
+        const rent = await getMinimumBalanceForRentExemptMint(connection);
+        const tx = new Transaction().add(SystemProgram.createAccount({
+          fromPubkey: wallet.publicKey,
+          newAccountPubkey: mintKp.publicKey,
+          space: MINT_SIZE, lamports: rent,
+          programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
+        }));
+        await simulateTx(tx);
+        log('Ceci n\'envoie rien, c\'est juste pour estimer la rent-exempt + frais.');
+      });
+
+      // expose safe fallbacks for inline onclick
+      window.__cfConnect = connect;
+      window.__cfDisconnect = disconnect;
+
+      // auto-set connection
+      setConnection();
+
+      // optional: wallet events
+      if(window.solana){
+        try{
+          window.solana.on?.('accountChanged', ()=>{ if(wallet?.publicKey){ els.addr.textContent = wallet.publicKey.toString(); refreshBalance(); } });
+          window.solana.on?.('disconnect', ()=>{ disconnect(); });
+        }catch{}
+      }
+    }
+
+    function grabEls(){
+      els = {
+        connectBtn: document.getElementById('connect'),
+        disconnectBtn: document.getElementById('disconnect'),
+        addr: document.getElementById('addr'),
+        balance: document.getElementById('balance'),
+        rpc: document.getElementById('rpc'),
+        net: document.getElementById('net'),
+        form: document.getElementById('form'),
+        log: document.getElementById('log'),
+        lastMint: document.getElementById('lastMint'),
+        raydiumLink: document.getElementById('raydiumLink'),
+        dexScreenerLink: document.getElementById('dexScreenerLink'),
+        simulate: document.getElementById('simulate'),
+        createBtn: document.getElementById('createMintBtn'),
+        renounceMint: document.getElementById('renounceMint'),
+        renounceFreeze: document.getElementById('renounceFreeze'),
+        decimals: document.getElementById('decimals'),
+        supply: document.getElementById('supply'),
+        freeze: document.getElementById('freeze')
+      };
+    }
+
+    function init(){
+      grabEls();
+      // guard if HTML not parsed yet (shouldn't happen with module defer, but safe)
+      if(!els.connectBtn){
+        document.addEventListener('DOMContentLoaded', ()=>{ grabEls(); wireEvents(); });
+      } else {
+        wireEvents();
+      }
+      // toggle freeze row visibility
+      const freezeEl = document.getElementById('freeze');
+      const freezeRow = document.getElementById('freezeRow');
+      freezeEl?.addEventListener('change', (e)=>{ if(freezeRow) freezeRow.style.display = e.target.checked? 'block':'none'; });
+    }
+
+    // ensure we run after DOM is parsed
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <div class="logo"></div>
+  <header>
+    <div class="brand">
+      <div class="logo">CF</div>
       <div>
-        <h1>SeulCoin‑style Token Builder (local, 100% contrôle)</h1>
-        <div class="muted">Génère un script PowerShell en 1–2 lignes pour créer ton token SPL, minter, envoyer au wallet, poser les metadata et te donner le lien Raydium.</div>
+        <h1>Créateur de Memecoin (Solana) – CoinFast‑like</h1>
+        <div class="muted" style="font-size:12px">Tout‑en‑un, 100% dans le navigateur. Par défaut sur <span class="pill">devnet</span>.</div>
       </div>
     </div>
+    <div class="flex">
+      <button id="connect" class="btn" onclick="window.__cfConnect && window.__cfConnect()">Connecter le wallet</button>
+      <button id="disconnect" class="btn ghost" style="display:none" onclick="window.__cfDisconnect && window.__cfDisconnect()">Déconnecter</button>
+    </div>
+  </header>
 
-    <div class="grid">
-      <div class="card">
+  <main class="grid">
+    <section class="card">
+      <h2>Paramètres & Réseau</h2>
+      <div class="row">
+        <div>
+          <label>Réseau</label>
+          <select id="net">
+            <option value="devnet" selected>Devnet (recommandé pour tester)</option>
+            <option value="mainnet-beta">Mainnet‑beta (réel)</option>
+          </select>
+        </div>
+        <div>
+          <label>RPC (optionnel)</label>
+          <input id="rpc" placeholder="Laisse vide pour défaut du réseau" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div>
+          <label>Adresse</label>
+          <div class="mono pill" id="addr">-</div>
+        </div>
+        <div>
+          <label>Solde</label>
+          <div class="mono pill" id="balance">-</div>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div class="flex">
+        <button class="btn" id="simulate">Estimer les frais (simulation)</button>
+      </div>
+      <p class="foot">Astuce : utilise un RPC privé (Helius/QuickNode) pour plus de fiabilité.</p>
+    </section>
+
+    <section class="card">
+      <h2>Création du Token SPL</h2>
+      <form id="form">
         <div class="row">
           <div>
-            <label>Réseau</label>
-            <select id="network">
-              <option value="mainnet">mainnet</option>
-              <option value="devnet">devnet (test)</option>
-            </select>
+            <label>Nom (facultatif)</label>
+            <input id="name" placeholder="ex. I AM STEVE" />
           </div>
           <div>
-            <label>Adresse Phantom (réception)</label>
-            <input id="owner" placeholder="Ton wallet Phantom" value="" />
+            <label>Symbole (facultatif)</label>
+            <input id="symbol" placeholder="ex. STEVE" />
           </div>
         </div>
-
-        <div class="row">
-          <div>
-            <label>Nom du token</label>
-            <input id="name" placeholder="Ex: SHIBA ANTONIN" />
-          </div>
-          <div>
-            <label>Ticker</label>
-            <input id="symbol" placeholder="Ex: ANTON" />
-          </div>
-        </div>
-
-        <div class="row">
+        <div class="row" style="margin-top:10px">
           <div>
             <label>Décimales</label>
-            <input id="decimals" type="number" value="9" min="0" max="9" />
+            <input id="decimals" type="number" min="0" max="9" value="6" />
           </div>
           <div>
-            <label>Supply totale (lisible)</label>
-            <input id="supply" placeholder="ex: 1000000000" />
+            <label>Total supply (nombre humain)</label>
+            <input id="supply" placeholder="ex. 1_000_000" />
           </div>
         </div>
-
-        <div class="row">
-          <div>
-            <label>Envoyer au wallet (lisible)</label>
-            <input id="send" placeholder="ex: 200000000" />
-          </div>
-          <div>
-            <label>% prévu pour la pool (indicatif)</label>
-            <input id="poolpct" type="number" min="0" max="100" value="20" />
-          </div>
+        <div style="margin-top:10px" class="flex">
+          <label class="switch"><input type="checkbox" id="freeze" /> <span>Activer un <b>freeze authority</b> (optionnel)</span></label>
+          <label class="switch" id="freezeRow" style="display:none"><input type="checkbox" id="renounceFreeze" /> <span>Renoncer au freeze après mint</span></label>
+          <label class="switch"><input type="checkbox" id="renounceMint" /> <span>Renoncer au mint authority après mint</span></label>
         </div>
-
-        <div class="row">
-          <div>
-            <label>Verrouiller l’autorité de mint ?</label>
-            <select id="lockmint">
-              <option value="true">Oui (recommandé)</option>
-              <option value="false">Non (je garde le mint)</option>
-            </select>
-          </div>
-          <div>
-            <label>Autorité de gel (freeze)</label>
-            <select id="freeze">
-              <option value="disable">Désactiver (recommandé)</option>
-              <option value="keep">Conserver</option>
-            </select>
-          </div>
+        <div class="hr"></div>
+        <div class="flex">
+          <button type="submit" class="btn primary" id="createMintBtn">Créer le token + envoyer le supply</button>
         </div>
+        <p class="foot">Remarques : le <em>name/symbol</em> ne sont visibles dans les wallets que si tu ajoutes des métadonnées (Metaplex). Cette page se concentre sur la création du mint + ATA + mintTo en sécurité.</p>
+      </form>
+    </section>
 
-        <div class="row">
-          <div>
-            <label>Activer les metadata (nom/ticker/logo visibles)</label>
-            <select id="metaset">
-              <option value="true">Oui</option>
-              <option value="false">Non</option>
-            </select>
-          </div>
-          <div>
-            <label>URI Metadata (IPFS/Arweave HTTPS)</label>
-            <input id="uri" placeholder="https://…/metadata.json" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label>Logo du token (glisser-déposer ou cliquer)</label>
-            <div id="drop" class="dropzone">Dépose ton image ici (PNG/JPG) ou clique pour choisir</div>
-            <input id="file" type="file" accept="image/*" style="display:none" />
-            <div class="hint">Astuce : quand tu exportes <code>metadata.json</code>, on télécharge aussi l'image (ex : <b>logo.png</b>). Uploade les 2 sur IPFS, puis colle l'URL du JSON ici.</div>
-          </div>
-          <div>
-            <label>Liens (facultatifs)</label>
-            <input id="website" placeholder="https://ton-site.com" />
-            <input id="twitter" placeholder="https://twitter.com/ton_handle" style="margin-top:8px" />
-            <input id="telegram" placeholder="https://t.me/ton_channel" style="margin-top:8px" />
-            <div class="hint">Ces liens seront ajoutés dans <code>metadata.extensions</code> (Metaplex).</div>
-          </div>
-        </div>
-
+    <section class="card" style="grid-column:1 / -1">
+      <h2>Étapes suivantes (Raydium / DexScreener)</h2>
+      <div class="row">
         <div>
-          <label>Description (facultatif – sera mise dans le JSON exporté)</label>
-          <textarea id="desc" placeholder="Pitch du coin, liens, etc."></textarea>
-          <div class="hint">Pour le logo : uploade l’image sur IPFS (Pinata/nft.storage), puis mets l’URL dans le JSON. Le programme <code>spl-token metadata</code> utilise l’URI.</div>
+          <label>Dernier mint créé</label>
+          <div id="lastMint" class="mono pill">-</div>
         </div>
-
-        <div class="chips">
-          <button class="btn" id="btnMeta">📦 Exporter <b>metadata.json</b> + image</button>
-          <button class="btn primary" id="btnGen">⚡ Générer le script</button>
+        <div class="flex" style="align-items:end;justify-content:flex-end">
+          <a id="dexScreenerLink" href="#" target="_blank" class="btn">Voir sur DexScreener</a>
+          <a id="raydiumLink" href="#" target="_blank" class="btn ok">Ouvrir Raydium (créer une pool)</a>
         </div>
       </div>
+      <ol class="muted" style="margin-top:8px">
+        <li>1) Vérifie que le mint est correct sur un explorateur, puis crée une <b>permissionless pool</b> sur Raydium (Token/SOL).</li>
+        <li>2) Dépose ta liquidité initiale avec des montants cohérents (attention aux MEV/bots).</li>
+        <li>3) Option : renonce aux autorités (fait ici) et verrouille ta liquidité via un locker tiers si nécessaire.</li>
+      </ol>
+      <p class="foot">Avertissement : Les opérations on-chain comportent des risques. Teste toujours sur <b>devnet</b> avant mainnet et lis les confirmations dans ton wallet.</p>
+    </section>
 
-      <div class="card">
-        <div class="kpi" style="margin-bottom:12px">
-          <div><div class="muted">Owner recevra</div><div id="kOwner" style="font-weight:700;font-size:18px">–</div></div>
-          <div><div class="muted">Restera côté CLI</div><div id="kCli" style="font-weight:700;font-size:18px">–</div></div>
-          <div><div class="muted">% prévu pour pool</div><div id="kPool" style="font-weight:700;font-size:18px">–</div></div>
-        </div>
-        <div class="muted" style="margin-bottom:8px">1‑ligne PowerShell (copie/colle → Entrée) :</div>
-        <div class="out" id="oneLiner">(généré ici)</div>
-        <div class="chips" style="margin-top:8px">
-          <button class="btn success" id="copy1">Copier la 1‑ligne</button>
-          <button class="btn" id="dlPs1">⬇️ Télécharger make_token.ps1</button>
-        </div>
-        <hr style="border:0;border-top:1px solid #273153;margin:18px 0" />
-        <div class="muted">Lien Raydium (création de pool) :</div>
-        <p><a href="https://raydium.io/create-pool" target="_blank">https://raydium.io/create-pool</a></p>
-        <p class="hint">Après exécution du script, récupère l’adresse du <b>Mint</b> affichée, puis crée la pool <b>SOL / TON_TOKEN</b>.</p>
-        <div class="hint">Sécurité : exécute d’abord sur <b>devnet</b> pour tester à faible coût. Garde toujours un peu de SOL pour les frais.</div>
-      </div>
-    </div>
-  </div>
+    <section class="card" style="grid-column:1 / -1">
+      <h2>Journal</h2>
+      <div id="log" class="log" aria-live="polite"></div>
+    </section>
 
-  <script>
-    const $ = (s)=>document.querySelector(s);
-    // Image state
-    let imgBlob = null; let imgName = 'logo.png'; let imgPreviewUrl = '';
+    <section class="card" style="grid-column:1 / -1">
+      <h2>FAQ Sécurité (résumé)</h2>
+      <ul>
+        <li>Cette page signe <b>uniquement</b> des transactions construites côté client ; aucune clé privée n’est exposée.</li>
+        <li>Le compte <b>mint</b> est généré localement, partiellement signé, puis ton wallet signe comme payeur → pas de perte de contrôle.</li>
+        <li>Tu peux cocher “Renoncer” pour retirer les autorités <em>après</em> la création (envoi séparé pour éviter de bricker le mint).</li>
+        <li>Ajout de liquidité Raydium : utilise l’UI officielle pour créer une pool permissionless, ou intègre ensuite un SDK serveur si tu veux tout automatiser.</li>
+      </ul>
+    </section>
 
-    // Compute quick KPIs
-    function refreshKPIs(){
-      const supply = ($('#supply').value||'').trim();
-      const send = ($('#send').value||'0').trim();
-      const pct = parseFloat($('#poolpct').value||'0');
-
-      const left = safeSub(supply, send);
-      $('#kOwner').textContent = send? send : '0';
-      $('#kCli').textContent = left;
-      $('#kPool').textContent = pct + '% prévu';
-    }
-
-    function safeSub(a,b){
-      if(!a) return '0';
-      try{ const x = BigInt(a), y = BigInt(b||'0'); return (x-y>=0n? (x-y) : 0n).toString(); }catch(e){ return '–'; }
-    }
-
-    ['supply','send','poolpct'].forEach(id=>{
-      $('#'+id).addEventListener('input', refreshKPIs);
-    });
-
-    function buildScript(values){
-      const block = `param(
-  [string]$Network = "${values.network}",
-  [string]$Owner = "${values.owner}",
-  [string]$Name = "${values.name}",
-  [string]$Symbol = "${values.symbol}",
-  [int]$Decimals = ${values.decimals},
-  [string]$TotalSupply = "${values.supply}",
-  [string]$SendToOwner = "${values.send}",
-  [bool]$LockMint = ${values.lockmint},
-  [string]$Freeze = "${values.freeze}",
-  [bool]$SetMetadata = ${values.metaset},
-  [string]$MetadataUri = "${values.uri}"
-)
-
-Write-Host "==> Réseau : $Network" -ForegroundColor Cyan
-$rpc = if ($Network -eq 'devnet') { 'https://api.devnet.solana.com' } else { 'https://api.mainnet-beta.solana.com' }
-solana config set --url $rpc | Out-Null
-
-# 1) Créer le mint
-$createOut = spl-token create-token --decimals $Decimals
-$mint = ($createOut | Select-String -Pattern 'Address:\\s+(\\S+)').Matches[0].Groups[1].Value
-Write-Host ("MINT : $mint") -ForegroundColor Green
-
-# 2) Créer ATA du wallet CLI
-$ataOut = spl-token create-account $mint
-
-# 3) Mint supply (valeur lisible)
-spl-token mint $mint $TotalSupply | Out-Host
-
-# 4) Envoi vers ton Phantom
-if ([bigint]::Parse($SendToOwner) -gt 0) {
-  spl-token transfer $mint $SendToOwner $Owner --allow-unfunded-recipient --fund-recipient | Out-Host
-}
-
-# 5) Autorités
-if ($LockMint) { spl-token authorize $mint mint --disable | Out-Host }
-if ($Freeze -eq 'disable') { spl-token authorize $mint freeze --disable | Out-Host }
-
-# 6) Metadata (facultatif)
-if ($SetMetadata -and $MetadataUri) {
-  spl-token metadata update $mint --uri $MetadataUri --name "$Name" --symbol "$Symbol" | Out-Host
-}
-
-# 7) Affichages
-spl-token display $mint | Out-Host
-Write-Host ("Lien Raydium (Create Pool): https://raydium.io/create-pool")
-Write-Host ("
-=> Garde le mint: $mint")
-`;
-      return block;
-    }
-
-    function valuesFromUI(){
-      const v = {
-        network: $('#network').value,
-        owner: ($('#owner').value||'').trim(),
-        name: ($('#name').value||'').trim(),
-        symbol: ($('#symbol').value||'').trim(),
-        decimals: ($('#decimals').value||'9').trim(),
-        supply: ($('#supply').value||'').trim(),
-        send: ($('#send').value||'0').trim(),
-        lockmint: $('#lockmint').value === 'true',
-        freeze: $('#freeze').value,
-        metaset: $('#metaset').value === 'true',
-        uri: ($('#uri').value||'').trim(),
-        desc: ($('#desc').value||'').trim(),
-        website: ($('#website').value||'').trim(),
-        twitter: ($('#twitter').value||'').trim(),
-        telegram: ($('#telegram').value||'').trim()
-      };
-      return v;
-    }
-
-    function makeOneLiner(ps){
-      // Here-string with double-quotes delimiter
-      const esc = ps.replace(/`/g,'``'); // escape backticks for safety
-      const one = `$s=@"
-${esc}
-"@; $p="$HOME\\make_token.ps1"; Set-Content -Encoding UTF8 -Path $p -Value $s; powershell -ExecutionPolicy Bypass -File $p`;
-      return one;
-    }
-
-    function copy(txt){ navigator.clipboard.writeText(txt).then(()=>{ alert('Copié !'); }); }
-    function downloadFile(name, content, mime){
-      const blob = content instanceof Blob ? content : new Blob([content], {type: mime || 'text/plain;charset=utf-8'});
-      const a=document.createElement('a');
-      a.href=URL.createObjectURL(blob);
-      a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),250);
-    }
-
-    document.getElementById('btnGen').addEventListener('click',()=>{
-      const v=valuesFromUI();
-      const missing=[];
-      if(!v.owner) missing.push('wallet Phantom');
-      if(!v.name) missing.push('nom');
-      if(!v.symbol) missing.push('ticker');
-      if(!v.supply) missing.push('supply totale');
-      if(v.metaset && !v.uri) missing.push('URI metadata');
-      if(missing.length){ alert('Complète: '+missing.join(', ')); return; }
-      const ps = buildScript(v);
-      const oneliner = makeOneLiner(ps);
-      document.getElementById('oneLiner').textContent = oneliner;
-    });
-
-    document.getElementById('copy1').addEventListener('click',()=> copy(document.getElementById('oneLiner').textContent));
-    document.getElementById('dlPs1').addEventListener('click',()=>{
-      const ps = buildScript(valuesFromUI());
-      downloadFile('make_token.ps1', ps);
-    });
-
-    // Metadata JSON export (for IPFS)
-    document.getElementById('btnMeta').addEventListener('click',()=>{
-      const v = valuesFromUI();
-      const json = {
-        name: v.name || "Your Token",
-        symbol: v.symbol || "TOK",
-        description: v.desc || "",
-        image: imgBlob ? (imgName || 'logo.png') : "https://PLACE_YOUR_IMAGE_URL",
-        extensions: {
-          website: v.website || "",
-          twitter: v.twitter || "",
-          telegram: v.telegram || ""
-        }
-      };
-      downloadFile('metadata.json', JSON.stringify(json,null,2));
-      if(imgBlob){ downloadFile(imgName || 'logo.png', imgBlob, imgBlob.type); }
-      alert('metadata.json exporté' + (imgBlob ? ' + image.' : '.') + ' Uploade-les sur IPFS/Arweave, puis colle l\'URL du JSON dans "URI Metadata" avant de générer le script.');
-    });
-
-    refreshKPIs();
-
-    // === Drag & Drop image handling ===
-    const drop = document.getElementById('drop'); const fileInput = document.getElementById('file');
-    function setPreview(file){
-      imgBlob = file; imgName = (file && file.name) ? file.name : 'logo.png';
-      if(imgPreviewUrl) URL.revokeObjectURL(imgPreviewUrl);
-      imgPreviewUrl = URL.createObjectURL(file);
-      drop.classList.add('has-file');
-      drop.textContent = 'Image chargée: ' + imgName + ' (clique pour changer)';
-      drop.style.backgroundImage = `url('${imgPreviewUrl}')`;
-      drop.style.backgroundSize = 'cover';
-      drop.style.backgroundPosition = 'center';
-      drop.style.color = '#e6fbe6';
-    }
-    function pickFile(){ fileInput.click(); }
-    if(drop){
-      drop.addEventListener('click', pickFile);
-      drop.addEventListener('dragover', (e)=>{ e.preventDefault(); drop.style.borderColor = '#6aa6ff'; });
-      drop.addEventListener('dragleave', ()=>{ drop.style.borderColor = '#2a3a62'; });
-      drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.style.borderColor = '#22c55e'; const f = e.dataTransfer.files[0]; if(f) setPreview(f); });
-    }
-    if(fileInput){ fileInput.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(f) setPreview(f); }); }
-  </script>
+    <footer class="foot" style="grid-column:1 / -1; text-align:center; padding:12px 0 24px">
+      Construit pour tourner localement (ouvrir le fichier dans ton navigateur). Une connexion Internet est requise pour l’RPC Solana.
+    </footer>
+  </main>
 </body>
 </html>
