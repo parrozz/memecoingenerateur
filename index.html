@@ -1,458 +1,280 @@
 <!doctype html>
 <html lang="fr">
 <head>
+  <!-- Meta de base -->
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CoinFast‑like | Créateur de Memecoin (Solana)</title>
-  <!-- Minimal styles (no build step needed) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CashKing AI – Gagnez 5000 € / mois en 60 jours grâce à l’IA</title>
+  <meta name="description" content="CashKing AI : une méthode simple et moderne pour générer 5000 € / mois en 60 jours grâce à l’IA – même sans expérience. Rejoignez la formation aujourd’hui !" />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Styles additionnels -->
   <style>
-    :root{--bg:#0b0f14;--panel:#10161f;--muted:#7d8b9b;--ok:#16a34a;--warn:#f59e0b;--err:#ef4444;--ink:#cbd5e1;--link:#60a5fa}
-    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:#e5e7eb;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    header{padding:20px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid #1f2937;background:linear-gradient(180deg,#0f172a,transparent)}
-    .brand{display:flex;gap:10px;align-items:center}
-    .logo{width:32px;height:32px;border-radius:8px;background:#1f2937;display:grid;place-items:center;font-weight:700}
-    h1{font-size:18px;margin:0}
-    main{max-width:1100px;margin:0 auto;padding:24px}
-    .grid{display:grid;grid-template-columns:1fr;gap:16px}
-    @media (min-width:980px){.grid{grid-template-columns:380px 1fr}}
-    .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:16px}
-    .card h2{margin:0 0 8px;font-size:16px}
-    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-    input,select,textarea{width:100%;background:#0b1220;border:1px solid #1f2937;border-radius:12px;padding:10px 12px;color:#e5e7eb;outline:none}
-    input::placeholder{color:#475569}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .btn{appearance:none;border:1px solid #303b4b;background:#0b1220;color:#e5e7eb;border-radius:12px;padding:10px 14px;font-weight:600;cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,#2563eb,#1d4ed8);border-color:#1d4ed8}
-    .btn.ghost{background:transparent}
-    .btn.warn{background:#3a2a00;border-color:#f59e0b;color:#ffd580}
-    .btn.ok{background:#0b2a19;border-color:#16a34a;color:#b7f7c0}
-    .muted{color:var(--muted)}
-    .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .switch{display:inline-flex;gap:8px;align-items:center}
-    .switch input{width:auto}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
-    .log{background:#070b12;border:1px solid #111827;border-radius:12px;padding:10px;min-height:140px;max-height:260px;overflow:auto;white-space:pre-wrap}
-    .pill{padding:3px 8px;border:1px solid #334155;border-radius:999px;font-size:12px}
-    .hr{height:1px;background:#1f2937;margin:8px 0}
-    a{color:var(--link);text-decoration:none}
-    .foot{font-size:12px;color:#94a3b8}
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', 'Noto Sans', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
   </style>
-  <!-- ESM CDN imports: web3 + spl-token (no bundler needed) -->
-  <script type="module">
-    import {
-      Connection, clusterApiUrl, PublicKey, SystemProgram, Transaction, Keypair, LAMPORTS_PER_SOL
-    } from "https://esm.sh/@solana/web3.js@1.95.3";
-
-    import {
-      MINT_SIZE,
-      getMinimumBalanceForRentExemptMint,
-      createInitializeMintInstruction,
-      getAssociatedTokenAddress,
-      createAssociatedTokenAccountInstruction,
-      createMintToInstruction,
-      createSetAuthorityInstruction,
-      AuthorityType
-    } from "https://esm.sh/@solana/spl-token@0.4.7";
-
-    // ---- Module-scope state (filled after DOM ready)
-    let els = {};
-    let wallet = null; // provider
-    let connection = null;
-    let lastMintPk = null;
-
-    function log(msg, type='info'){
-      if(!els.log) return;
-      const t = new Date().toLocaleTimeString();
-      const tag = type==='ok'?'✅':type==='warn'?'⚠️':type==='err'?'🛑':'•';
-      els.log.textContent += `[${t}] ${tag} ${msg}
-`;
-      els.log.scrollTop = els.log.scrollHeight;
-    }
-
-    function setConnection() {
-      const network = els.net?.value || 'devnet';
-      const rpc = els.rpc?.value?.trim?.() || clusterApiUrl(network);
-      connection = new Connection(rpc, {commitment:'confirmed'});
-      log(`RPC → ${rpc}`);
-    }
-
-    async function refreshBalance(){
-      try{
-        if(!wallet?.publicKey || !connection) return;
-        const lamports = await connection.getBalance(wallet.publicKey);
-        els.balance.textContent = (lamports / LAMPORTS_PER_SOL).toFixed(4) + ' SOL';
-      }catch(e){ log('Balance error: '+(e.message||e), 'warn'); }
-    }
-
-    // ---- Wallet detection helper
-    function detectWallet(){
-      const w = (window.solana && (window.solana.isPhantom || window.solana.isBackpack)) ? window.solana
-              : (window.phantom?.solana ? window.phantom.solana : null);
-      return w;
-    }
-
-    async function connect(){
-      try{
-        wallet = detectWallet();
-        if(!wallet){
-          log('Aucun wallet détecté. Installe Phantom et recharge la page.', 'warn');
-          alert('Aucun wallet Solana détecté. Installe Phantom (phantom.app) et recharge la page.');
-          return;
-        }
-        // trigger connect prompt from a user gesture
-        if(!wallet.isConnected){
-          await wallet.connect({ onlyIfTrusted:false });
-        }
-        els.addr.textContent = wallet.publicKey.toString();
-        els.connectBtn.style.display='none';
-        els.disconnectBtn.style.display='inline-flex';
-        setConnection();
-        await refreshBalance();
-        log('Wallet connecté.');
-      }catch(e){
-        log('Connexion wallet échouée: '+(e.message||e), 'err');
-      }
-    }
-
-    async function disconnect(){
-      try{ await wallet?.disconnect?.(); }catch{}
-      wallet = null;
-      els.addr.textContent = '-';
-      els.balance.textContent = '-';
-      els.connectBtn.style.display='inline-flex';
-      els.disconnectBtn.style.display='none';
-      log('Wallet déconnecté.');
-    }
-
-    const BN10 = (n)=> BigInt(n);
-    function toBaseUnits(amountStr, decimals){
-      const [intp, fracp=''] = String(amountStr).split('.');
-      const safeFrac = (fracp + '0'.repeat(decimals)).slice(0, decimals);
-      return BN10(intp) * BN10(10)**BN10(decimals) + BN10(safeFrac || 0);
-    }
-
-    async function simulateTx(tx){
-      try{
-        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-        tx.feePayer = wallet.publicKey;
-        const sim = await connection.simulateTransaction(tx, {sigVerify:false});
-        if(sim.value.err){
-          log('Simulation: ECHEC → '+JSON.stringify(sim.value.err), 'warn');
-        }else{
-          log('Simulation: OK. unités compute ≈ '+sim.value.unitsConsumed, 'ok');
-        }
-      }catch(e){ log('Simulation error: '+(e.message||e), 'warn'); }
-    }
-
-    async function signAndSend(tx, extraSigners=[]) {
-      tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-      tx.feePayer = wallet.publicKey;
-      if(extraSigners.length) tx.partialSign(...extraSigners);
-      if(typeof wallet.signAndSendTransaction === 'function'){
-        const { signature } = await wallet.signAndSendTransaction(tx);
-        log('Signature: '+signature);
-        await connection.confirmTransaction(signature, 'confirmed');
-        return signature;
-      } else if(typeof wallet.signTransaction === 'function'){
-        const signed = await wallet.signTransaction(tx);
-        const sig = await connection.sendRawTransaction(signed.serialize());
-        log('Signature: '+sig);
-        await connection.confirmTransaction(sig, 'confirmed');
-        return sig;
-      } else {
-        throw new Error('Wallet ne supporte pas signTransaction.');
-      }
-    }
-
-    async function createMintFlow(ev){
-      ev?.preventDefault?.();
-      if(!wallet?.publicKey) return alert('Connecte ton wallet.');
-      setConnection();
-
-      const decimals = parseInt(els.decimals.value || '6', 10);
-      const supplyStr = els.supply.value.trim();
-      const setFreeze = els.freeze.checked;
-
-      if(!supplyStr) return alert('Renseigne un total supply.');
-      if(decimals<0 || decimals>9) return alert('Décimales entre 0 et 9.');
-
-      try{
-        log('Préparation de la création du mint…');
-        const mintKp = Keypair.generate();
-        const mintPk = mintKp.publicKey;
-
-        const rent = await getMinimumBalanceForRentExemptMint(connection);
-        const createMintIx = SystemProgram.createAccount({
-          fromPubkey: wallet.publicKey,
-          newAccountPubkey: mintPk,
-          space: MINT_SIZE,
-          lamports: rent,
-          programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
-        });
-
-        const initMintIx = createInitializeMintInstruction(
-          mintPk,
-          decimals,
-          wallet.publicKey, // mint authority
-          setFreeze ? wallet.publicKey : null // freeze authority
-        );
-
-        const ata = await getAssociatedTokenAddress(
-          mintPk,
-          wallet.publicKey,
-        );
-        const createAtaIx = createAssociatedTokenAccountInstruction(
-          wallet.publicKey,
-          ata,
-          wallet.publicKey,
-          mintPk
-        );
-
-        const amount = toBaseUnits(supplyStr, decimals);
-        const mintToIx = createMintToInstruction(
-          mintPk,
-          ata,
-          wallet.publicKey,
-          amount
-        );
-
-        const tx1 = new Transaction().add(createMintIx, initMintIx, createAtaIx, mintToIx);
-        await simulateTx(tx1);
-        await signAndSend(tx1, [mintKp]);
-        log('Mint créé: '+mintPk.toString(), 'ok');
-
-        lastMintPk = mintPk;
-        els.lastMint.textContent = mintPk.toString();
-        els.dexScreenerLink.href = `https://dexscreener.com/solana/${mintPk.toString()}`;
-        els.raydiumLink.href = `https://raydium.io/liquidity/`;
-
-        const renounceList = [];
-        if(els.renounceMint.checked){
-          renounceList.push(createSetAuthorityInstruction(mintPk, wallet.publicKey, AuthorityType.MintTokens, null));
-        }
-        if(els.renounceFreeze.checked && setFreeze){
-          renounceList.push(createSetAuthorityInstruction(mintPk, wallet.publicKey, AuthorityType.FreezeAccount, null));
-        }
-        if(renounceList.length){
-          const tx2 = new Transaction().add(...renounceList);
-          await simulateTx(tx2);
-          await signAndSend(tx2);
-          log('Autorités renoncées selon options cochées.', 'ok');
-        }
-
-        await refreshBalance();
-        log('Terminé. Tu peux maintenant créer une pool sur Raydium en utilisant ce mint.');
-      }catch(e){
-        console.error(e);
-        log('Echec: '+(e.message||e), 'err');
-      }
-    }
-
-    function wireEvents(){
-      els.connectBtn?.addEventListener('click', connect);
-      els.disconnectBtn?.addEventListener('click', disconnect);
-      els.net?.addEventListener('change', setConnection);
-      els.rpc?.addEventListener('change', setConnection);
-      els.form?.addEventListener('submit', createMintFlow);
-      els.createBtn?.addEventListener('click', createMintFlow);
-      els.simulate?.addEventListener('click', async ()=>{
-        if(!wallet?.publicKey) return alert('Connecte ton wallet.');
-        setConnection();
-        const mintKp = Keypair.generate();
-        const rent = await getMinimumBalanceForRentExemptMint(connection);
-        const tx = new Transaction().add(SystemProgram.createAccount({
-          fromPubkey: wallet.publicKey,
-          newAccountPubkey: mintKp.publicKey,
-          space: MINT_SIZE, lamports: rent,
-          programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
-        }));
-        await simulateTx(tx);
-        log('Ceci n\'envoie rien, c\'est juste pour estimer la rent-exempt + frais.');
-      });
-
-      // expose safe fallbacks for inline onclick
-      window.__cfConnect = connect;
-      window.__cfDisconnect = disconnect;
-
-      // auto-set connection
-      setConnection();
-
-      // optional: wallet events
-      if(window.solana){
-        try{
-          window.solana.on?.('accountChanged', ()=>{ if(wallet?.publicKey){ els.addr.textContent = wallet.publicKey.toString(); refreshBalance(); } });
-          window.solana.on?.('disconnect', ()=>{ disconnect(); });
-        }catch{}
-      }
-    }
-
-    function grabEls(){
-      els = {
-        connectBtn: document.getElementById('connect'),
-        disconnectBtn: document.getElementById('disconnect'),
-        addr: document.getElementById('addr'),
-        balance: document.getElementById('balance'),
-        rpc: document.getElementById('rpc'),
-        net: document.getElementById('net'),
-        form: document.getElementById('form'),
-        log: document.getElementById('log'),
-        lastMint: document.getElementById('lastMint'),
-        raydiumLink: document.getElementById('raydiumLink'),
-        dexScreenerLink: document.getElementById('dexScreenerLink'),
-        simulate: document.getElementById('simulate'),
-        createBtn: document.getElementById('createMintBtn'),
-        renounceMint: document.getElementById('renounceMint'),
-        renounceFreeze: document.getElementById('renounceFreeze'),
-        decimals: document.getElementById('decimals'),
-        supply: document.getElementById('supply'),
-        freeze: document.getElementById('freeze')
-      };
-    }
-
-    function init(){
-      grabEls();
-      // guard if HTML not parsed yet (shouldn't happen with module defer, but safe)
-      if(!els.connectBtn){
-        document.addEventListener('DOMContentLoaded', ()=>{ grabEls(); wireEvents(); });
-      } else {
-        wireEvents();
-      }
-      // toggle freeze row visibility
-      const freezeEl = document.getElementById('freeze');
-      const freezeRow = document.getElementById('freezeRow');
-      freezeEl?.addEventListener('change', (e)=>{ if(freezeRow) freezeRow.style.display = e.target.checked? 'block':'none'; });
-    }
-
-    // ensure we run after DOM is parsed
-    if(document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-  </script>
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALYAAABmCAYAAABmzm srAAA AAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEn" type="image/png"/>
 </head>
-<body>
-  <header>
-    <div class="brand">
-      <div class="logo">CF</div>
-      <div>
-        <h1>Créateur de Memecoin (Solana) – CoinFast‑like</h1>
-        <div class="muted" style="font-size:12px">Tout‑en‑un, 100% dans le navigateur. Par défaut sur <span class="pill">devnet</span>.</div>
+<body class="bg-[#F6F7FB] text-[#374151]">
+  <!-- ======================= Bannière d'urgence ======================= -->
+  <div class="w-full bg-[#EC4899] hover:bg-[#DB2777] text-white text-center py-2 px-4" role="note" aria-label="Offre spéciale du jour">
+    <p class="text-sm md:text-base font-semibold flex items-center justify-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 animate-pulse" aria-hidden="true"><path fill-rule="evenodd" d="M12 2.25a.75.75 0 01.67.415l2.219 4.495 4.962.721a.75.75 0 01.416 1.279l-3.59 3.498.848 4.94a.75.75 0 01-1.088.791L12 16.347l-4.437 2.342a.75.75 0 01-1.088-.79l.848-4.941-3.59-3.498a.75.75 0 01.416-1.279l4.962-.721 2.22-4.495A.75.75 0 0112 2.25z" clip-rule="evenodd"/></svg>
+      <span>Offre spéciale : <span class="underline">147 €</span> jusqu’au <span id="banner-date"></span> 23h59 !</span>
+    </p>
+  </div>
+
+  <!-- ======================= Header / Hero ======================= -->
+  <header class="relative" role="banner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Barre supérieure simple -->
+      <div class="flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2" aria-label="CashKing AI – Accueil">
+  <img id="brand-logo" src="https://i.goopics.net/7qruef.png" alt="Logo CashKing AI" class="h-9 w-auto rounded-md" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';" />
+  <span class="font-bold text-lg text-[#1D4ED8]">CashKing AI</span>
+</a>
+        <nav class="hidden md:flex items-center gap-6" aria-label="Navigation principale">
+          <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg shadow-pink-200/60 hover:scale-[1.04] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Rejoindre CashKing AI maintenant">
+            Rejoignez CashKing AI maintenant !
+          </a>
+        </nav>
       </div>
-    </div>
-    <div class="flex">
-      <button id="connect" class="btn" onclick="window.__cfConnect && window.__cfConnect()">Connecter le wallet</button>
-      <button id="disconnect" class="btn ghost" style="display:none" onclick="window.__cfDisconnect && window.__cfDisconnect()">Déconnecter</button>
+
+      <!-- Bloc Hero -->
+      <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center mt-10 md:mt-14">
+        <div>
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-[#1D4ED8]">Gagnez 5000 € par mois en 60 jours grâce à l’IA – <span class="underline decoration-[#22D3EE] decoration-4 underline-offset-4">Sans expérience</span> !</h1>
+          <p class="mt-5 text-lg md:text-xl text-[#1D4ED8]">CashKing AI transforme votre vie avec des outils IA incroyablement simples.</p>
+          <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg shadow-pink-200/60 hover:scale-[1.05] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300 animate-pulse" role="button" aria-label="Passez à l'action et rejoignez la formation">
+              Rejoignez CashKing AI maintenant !
+            </a></div>
+          <p class="mt-4 text-sm text-gray-600"><span class="text-[#1D4ED8] font-semibold">l’IA d’aujourd’hui rend la liberté financière à portée de main</span> !</p>
+        </div>
+        <div class="relative">
+          <div class="aspect-[4/3] rounded-2xl bg-white shadow-xl shadow-blue-200/40 p-2">
+            <img src="https://via.placeholder.com/800x600" alt="Aperçu de la formation CashKing AI" class="w-full h-full object-cover rounded-xl" />
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
-  <main class="grid">
-    <section class="card">
-      <h2>Paramètres & Réseau</h2>
-      <div class="row">
-        <div>
-          <label>Réseau</label>
-          <select id="net">
-            <option value="devnet" selected>Devnet (recommandé pour tester)</option>
-            <option value="mainnet-beta">Mainnet‑beta (réel)</option>
-          </select>
-        </div>
-        <div>
-          <label>RPC (optionnel)</label>
-          <input id="rpc" placeholder="Laisse vide pour défaut du réseau" />
-        </div>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <div>
-          <label>Adresse</label>
-          <div class="mono pill" id="addr">-</div>
-        </div>
-        <div>
-          <label>Solde</label>
-          <div class="mono pill" id="balance">-</div>
-        </div>
-      </div>
-      <div class="hr"></div>
-      <div class="flex">
-        <button class="btn" id="simulate">Estimer les frais (simulation)</button>
-      </div>
-      <p class="foot">Astuce : utilise un RPC privé (Helius/QuickNode) pour plus de fiabilité.</p>
-    </section>
-
-    <section class="card">
-      <h2>Création du Token SPL</h2>
-      <form id="form">
-        <div class="row">
+  <!-- ======================= Storytelling ======================= -->
+  <main id="main" role="main">
+    <section id="story" class="scroll-mt-24 py-16 md:py-24 bg-[#E5E7EB]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <label>Nom (facultatif)</label>
-            <input id="name" placeholder="ex. I AM STEVE" />
+            <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8]">L’histoire de CashKing AI : De la galère à la simplicité avec l’IA</h2>
+            <p class="mt-6 leading-relaxed text-gray-700">
+              Il y a plus d’un an, l’IA a débarqué, mais les outils d’alors étaient décevants : impossibles à monétiser, sauf avec l’OFM IA, qui était un cauchemar – complexe, risqué, avec du vol de contenu et une IA inefficace. Monétiser sur Instagram ? Un enfer, avec des procès en France qui ont condamné plusieurs personnes. Mais tout a basculé avec les nouveaux outils IA : vidéos réalistes avec chorégraphies, playback, et transformations en personnages hyperréalistes. Fini les désavantages de l’OFM IA – plus de vol, juste du contenu viral, convaincant, et monétisable. Et ce n’est pas tout : l’IA est devenue si puissante qu’elle ouvre des portes inédites : OFM, marketing digital, monétisation TikTok… des revenus à portée de main !
+            </p>
+            <p class="mt-6 leading-relaxed text-gray-700">
+              Il y a 2 mois, j’ai sauté sur l’opportunité. En deux semaines, mon compte Instagram a explosé, et j’ai généré 5000 €. Aujourd’hui, après deux mois, je dépasse 20 000 €/mois. Avec CashKing AI, gagner de l’argent n’a jamais été aussi simple – et c’est votre tour de prendre le contrôle ! Osez comme moi, et transformez votre vie dès maintenant !
+            </p>
+            <div class="mt-6 flex items-center gap-3">
+              <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.04] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Je veux passer à l'action">
+                Je veux commencer maintenant
+              </a></div>
           </div>
           <div>
-            <label>Symbole (facultatif)</label>
-            <input id="symbol" placeholder="ex. STEVE" />
+            <img src="https://via.placeholder.com/600x400" alt="Votre parcours CashKing AI" class="w-full rounded-2xl shadow-xl shadow-blue-200/40" />
           </div>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div>
-            <label>Décimales</label>
-            <input id="decimals" type="number" min="0" max="9" value="6" />
-          </div>
-          <div>
-            <label>Total supply (nombre humain)</label>
-            <input id="supply" placeholder="ex. 1_000_000" />
-          </div>
-        </div>
-        <div style="margin-top:10px" class="flex">
-          <label class="switch"><input type="checkbox" id="freeze" /> <span>Activer un <b>freeze authority</b> (optionnel)</span></label>
-          <label class="switch" id="freezeRow" style="display:none"><input type="checkbox" id="renounceFreeze" /> <span>Renoncer au freeze après mint</span></label>
-          <label class="switch"><input type="checkbox" id="renounceMint" /> <span>Renoncer au mint authority après mint</span></label>
-        </div>
-        <div class="hr"></div>
-        <div class="flex">
-          <button type="submit" class="btn primary" id="createMintBtn">Créer le token + envoyer le supply</button>
-        </div>
-        <p class="foot">Remarques : le <em>name/symbol</em> ne sont visibles dans les wallets que si tu ajoutes des métadonnées (Metaplex). Cette page se concentre sur la création du mint + ATA + mintTo en sécurité.</p>
-      </form>
-    </section>
-
-    <section class="card" style="grid-column:1 / -1">
-      <h2>Étapes suivantes (Raydium / DexScreener)</h2>
-      <div class="row">
-        <div>
-          <label>Dernier mint créé</label>
-          <div id="lastMint" class="mono pill">-</div>
-        </div>
-        <div class="flex" style="align-items:end;justify-content:flex-end">
-          <a id="dexScreenerLink" href="#" target="_blank" class="btn">Voir sur DexScreener</a>
-          <a id="raydiumLink" href="#" target="_blank" class="btn ok">Ouvrir Raydium (créer une pool)</a>
         </div>
       </div>
-      <ol class="muted" style="margin-top:8px">
-        <li>1) Vérifie que le mint est correct sur un explorateur, puis crée une <b>permissionless pool</b> sur Raydium (Token/SOL).</li>
-        <li>2) Dépose ta liquidité initiale avec des montants cohérents (attention aux MEV/bots).</li>
-        <li>3) Option : renonce aux autorités (fait ici) et verrouille ta liquidité via un locker tiers si nécessaire.</li>
-      </ol>
-      <p class="foot">Avertissement : Les opérations on-chain comportent des risques. Teste toujours sur <b>devnet</b> avant mainnet et lis les confirmations dans ton wallet.</p>
     </section>
 
-    <section class="card" style="grid-column:1 / -1">
-      <h2>Journal</h2>
-      <div id="log" class="log" aria-live="polite"></div>
+    <!-- ======================= Bénéfices / Modules ======================= -->
+    <section id="benefits" class="scroll-mt-24 py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8] text-center">Pourquoi CashKing AI est votre ticket vers la liberté</h2>
+        <p class="mt-3 text-center text-[#1D4ED8]">Passez de 0 à 5000 €/mois en 60 jours avec des outils IA simples.</p>
+
+        <!-- Cartes -->
+        <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Module 1 -->
+          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
+            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">1</div>
+            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 1 : Maîtrisez l’IA sans jargon</h3>
+            <p class="mt-2 text-gray-700">Comprenez et utilisez l’IA dès le jour 1 avec des tutos ultra concrets. Zéro théorie inutile.</p>
+          </div>
+          <!-- Module 2 -->
+          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
+            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">2</div>
+            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 2 : Créez des vidéos IA qui vendent</h3>
+            <p class="mt-2 text-gray-700">De l’idée au post viral : chorégraphies, playback, avatars IA hyperréalistes qui captent l’attention.</p>
+          </div>
+          <!-- Module 3 -->
+          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
+            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">3</div>
+            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 3 : Monétisez avec CashKing AI et affiliation</h3>
+            <p class="mt-2 text-gray-700">Stratégies prêtes à l’emploi : offres, scripts, pages et placements qui convertissent.</p>
+          </div>
+          <!-- Module 4 -->
+          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
+            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">4</div>
+            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 4 : Automatisez vos revenus 24/7</h3>
+            <p class="mt-2 text-gray-700">Systèmes simples : planification, auto-DM, réutilisation multi-plateformes pour des revenus en continu.</p>
+          </div>
+          <!-- Bonus -->
+          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB] sm:col-span-2 lg:col-span-1">
+            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">★</div>
+            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Bonus : Templates vidéo IA + coaching live (limité)</h3>
+            <p class="mt-2 text-gray-700">Copiez-collez nos meilleurs modèles et bénéficiez de sessions live pour accélérer vos résultats.</p>
+          </div>
+        </div>
+
+        <!-- CTA secondaire sous bénéfices -->
+        <div class="mt-10 text-center">
+          <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Je profite de l'offre CashKing AI">
+            Je profite de l’offre maintenant
+          </a>
+        </div>
+      </div>
     </section>
 
-    <section class="card" style="grid-column:1 / -1">
-      <h2>FAQ Sécurité (résumé)</h2>
-      <ul>
-        <li>Cette page signe <b>uniquement</b> des transactions construites côté client ; aucune clé privée n’est exposée.</li>
-        <li>Le compte <b>mint</b> est généré localement, partiellement signé, puis ton wallet signe comme payeur → pas de perte de contrôle.</li>
-        <li>Tu peux cocher “Renoncer” pour retirer les autorités <em>après</em> la création (envoi séparé pour éviter de bricker le mint).</li>
-        <li>Ajout de liquidité Raydium : utilise l’UI officielle pour créer une pool permissionless, ou intègre ensuite un SDK serveur si tu veux tout automatiser.</li>
-      </ul>
+    <!-- ======================= Preuves sociales ======================= -->
+    <section id="testimonials" class="scroll-mt-24 py-16 md:py-24 bg-[#E5E7EB]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8] text-center">Ils ont réussi avec CashKing AI</h2>
+        <div class="mt-10 grid md:grid-cols-3 gap-6">
+          <!-- Carte 1 -->
+          <figure class="p-6 bg-white rounded-2xl shadow-lg border border-[#E5E7EB]">
+            <img src="https://via.placeholder.com/100x100" alt="Photo de Sarah" class="w-16 h-16 rounded-full" />
+            <blockquote class="mt-4 text-gray-700">« Sarah, 34 ans : 3000 € en 45 jours avec des vidéos IA. »</blockquote>
+          </figure>
+          <!-- Carte 2 -->
+          <figure class="p-6 bg-white rounded-2xl shadow-lg border border-[#E5E7EB]">
+            <img src="https://via.placeholder.com/100x100" alt="Photo de Mehdi" class="w-16 h-16 rounded-full" />
+            <blockquote class="mt-4 text-gray-700">« Mehdi, 28 ans : 500 € en 60 jours avec des packages IA. »</blockquote>
+          </figure>
+          <!-- Carte 3 -->
+          <figure class="p-6 bg-white rounded-2xl shadow-lg border border-[#E5E7EB]">
+            <img src="https://via.placeholder.com/100x100" alt="Photo de Camille" class="w-16 h-16 rounded-full" />
+            <blockquote class="mt-4 text-gray-700">« Camille, 41 ans : Revenus passifs 24/7. »</blockquote>
+          </figure>
+        </div>
+
+        <!-- CTA après preuves sociales -->
+        <div class="mt-10 text-center">
+          <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Rejoindre maintenant après lecture des témoignages">
+            Rejoindre CashKing AI maintenant
+          </a>
+        </div>
+      </div>
     </section>
 
-    <footer class="foot" style="grid-column:1 / -1; text-align:center; padding:12px 0 24px">
-      Construit pour tourner localement (ouvrir le fichier dans ton navigateur). Une connexion Internet est requise pour l’RPC Solana.
-    </footer>
+    <!-- ======================= Offre ======================= -->
+    <section id="offer" class="scroll-mt-24 py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+          <div class="p-8 rounded-3xl bg-white shadow-2xl shadow-blue-200/50 border border-[#E5E7EB]">
+            <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8]">Devenez libre financièrement avec CashKing AI !</h2>
+            <p class="mt-4 text-gray-700">Prix normal <span class="line-through">297 €</span>, <span class="font-bold text-[#1D4ED8]">offre spéciale 147 €</span> (–50 %, valable toute l’année avec urgence quotidienne). Possibilité de paiement en <span class="font-semibold">3 × 49 €</span>.</p>
+
+            <!-- Compte à rebours -->
+            <div class="mt-6 p-5 rounded-2xl bg-[#E5E7EB] border border-[#E5E7EB]">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="text-sm text-gray-600">Temps restant aujourd’hui</p>
+                  <p id="countdown" class="mt-1 text-2xl md:text-3xl font-extrabold text-[#1D4ED8]" aria-live="polite">—</p>
+                </div>
+                <div class="hidden sm:block w-px h-12 bg-[#E5E7EB]" aria-hidden="true"></div>
+                <div class="flex-1">
+                  <p class="text-sm text-gray-600">Offre actuelle</p>
+                  <p class="mt-1 text-3xl font-extrabold text-[#22D3EE]">147 €</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <a href="#" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Inscrivez-vous maintenant">
+                Inscrivez-vous maintenant !
+              </a></div>
+
+            <p class="mt-4 text-sm text-gray-600">Garantie 30 jours satisfait ou remboursé. Les résultats dépendent de votre engagement.</p>
+          </div>
+
+          <!-- Liste récapitulatif / Ce que vous recevez -->
+          <div class="p-8 rounded-3xl bg-white shadow-2xl shadow-blue-200/50 border border-[#E5E7EB]">
+            <h3 class="text-xl md:text-2xl font-bold text-[#1D4ED8]">Tout ce que vous recevez :</h3>
+            <ul class="mt-4 space-y-3 text-gray-700">
+              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Accès complet aux 4 modules vidéo (mises à jour incluses).</li>
+              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Fiches actions prêtes à l’emploi (checklists & scripts).</li>
+              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Templates de vidéos IA (hook, scène, CTA).</li>
+              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Accès au coaching live (places limitées).</li>
+              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Accès privé à la communauté CashKing AI.</li>
+              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Bonus & nouvelles stratégies IA au fil de l’année.</li>
+            </ul>
+
+            <div class="mt-8">
+              <a href="#" class="min-h-[44px] w-full inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Je prends ma place maintenant">
+                Je prends ma place maintenant
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <!-- ======================= Footer ======================= -->
+  <footer class="py-10 border-t border-[#E5E7EB] bg-white" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-sm text-gray-600">© 2025 CashKing AI. Tous droits réservés.</p>
+      
+    </div>
+  </footer>
+
+  <!-- ======================= Scripts ======================= -->
+  <script>
+    // -- Bannière : insérer la date du jour dans le texte --
+    (function(){
+      var d=new Date();
+      var dd=('0'+d.getDate()).slice(-2);
+      var mm=('0'+(d.getMonth()+1)).slice(-2);
+      var yyyy=d.getFullYear();
+      var el=document.getElementById('banner-date');
+      if(el){ el.textContent = dd+'/'+mm+'/'+yyyy; }
+    })();
+    // --- Compte à rebours (spécifique au 04/09/2025 23:59:00 CEST) ---
+    // fournie dans la consigne utilisateur
+    function updateCountdown() {
+      const deadline = new Date("September 04, 2025 23:59:00").getTime();
+      const now = new Date().getTime();
+      const distance = deadline - now;
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      const el = document.getElementById("countdown");
+      if (!el) return;
+      if (distance >= 0) {
+        el.textContent = `${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        clearInterval(countdownInterval);
+        el.textContent = "Offre expirée — prochaine remise à minuit !";
+      }
+    }
+    const countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+  <script>
+    // Ensure fresh fetch (cache-bust) of external logo; fallback to inline if blocked
+    (function(){
+      var el=document.getElementById('brand-logo');
+      if(!el) return;
+      var u=new URL(el.src, window.location.href);
+      u.searchParams.set('ts', Date.now());
+      el.src = u.toString();
+    })();
+  </script>
 </body>
 </html>
