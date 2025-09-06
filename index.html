@@ -20,7 +20,10 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', 'Noto Sans', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
   </style>
-  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALYAAABmCAYAAABmzm srAAA AAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEn" type="image/png"/>
+
+  <!-- Favicon (1x1 transparent PNG) -->
+  <link rel="icon" type="image/png"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMBAAhdw3EAAAAASUVORK5CYII=" />
 </head>
 <body class="bg-[#F6F7FB] text-[#374151]">
   <!-- ======================= Bannière d'urgence ======================= -->
@@ -37,9 +40,8 @@
       <!-- Barre supérieure simple -->
       <div class="flex items-center justify-between">
         <a href="#" class="flex items-center gap-2" aria-label="CashKing AI – Accueil">
-  <img id="brand-logo" src="https://i.goopics.net/7qruef.png" alt="Logo CashKing AI" class="h-9 w-auto rounded-md" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';" />
-  <span class="font-bold text-lg text-[#1D4ED8]">CashKing AI</span>
-</a>
+          <img id="brand-logo" src="https://i.goopics.net/j727h3.png" alt="Logo CashKing AI" class="h-12 w-auto rounded-md" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';" />
+        </a>
         <nav class="hidden md:flex items-center gap-6" aria-label="Navigation principale">
           <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg shadow-pink-200/60 hover:scale-[1.04] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Rejoindre CashKing AI maintenant">
             Rejoignez CashKing AI maintenant !
@@ -48,20 +50,22 @@
       </div>
 
       <!-- Bloc Hero -->
-      <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center mt-10 md:mt-14">
+      <div class="grid md:grid-cols-1 gap-8 md:gap-12 items-center mt-10 md:mt-14">
         <div>
-          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-[#1D4ED8]">Gagnez 5000 € par mois en 60 jours grâce à l’IA – <span class="underline decoration-[#22D3EE] decoration-4 underline-offset-4">Sans expérience</span> !</h1>
-          <p class="mt-5 text-lg md:text-xl text-[#1D4ED8]">CashKing AI transforme votre vie avec des outils IA incroyablement simples.</p>
-          <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-[#1D4ED8] text-center">Gagnez 5000 € par mois en 60 jours grâce à l’IA – <span class="underline decoration-[#22D3EE] decoration-4 underline-offset-4">Sans expérience</span> !</h1>
+          <p class="mt-5 text-lg md:text-xl text-[#1D4ED8] text-center">CashKing AI transforme votre vie avec des outils IA incroyablement simples.</p>
+          <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
             <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg shadow-pink-200/60 hover:scale-[1.05] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300 animate-pulse" role="button" aria-label="Passez à l'action et rejoignez la formation">
               Rejoignez CashKing AI maintenant !
-            </a></div>
-          <p class="mt-4 text-sm text-gray-600"><span class="text-[#1D4ED8] font-semibold">l’IA d’aujourd’hui rend la liberté financière à portée de main</span> !</p>
-        </div>
-        <div class="relative">
-          <div class="aspect-[4/3] rounded-2xl bg-white shadow-xl shadow-blue-200/40 p-2">
-            <img src="https://via.placeholder.com/800x600" alt="Aperçu de la formation CashKing AI" class="w-full h-full object-cover rounded-xl" />
+            </a>
           </div>
+          <div class="mt-3 flex items-center justify-center gap-3">
+            <span class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-[#1D4ED8]/10 text-[#1D4ED8]" aria-label="76 clients satisfaits">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.415l-7.25 7.25a1 1 0 01-1.414 0L3.296 9.21a1 1 0 111.414-1.414l3.024 3.023 6.543-6.543a1 1 0 011.427.014z" clip-rule="evenodd"/></svg>
+              76 clients satisfaits
+            </span>
+          </div>
+          <p class="mt-4 text-sm text-gray-600 text-center"><span class="text-[#1D4ED8] font-semibold">l’IA d’aujourd’hui rend la liberté financière à portée de main</span> !</p>
         </div>
       </div>
     </div>
@@ -71,9 +75,9 @@
   <main id="main" role="main">
     <section id="story" class="scroll-mt-24 py-16 md:py-24 bg-[#E5E7EB]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="grid md:grid-cols-1 gap-10 items-center">
           <div>
-            <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8]">L’histoire de CashKing AI : De la galère à la simplicité avec l’IA</h2>
+            <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8]">Mon Histoire, De la galère au Succès</h2>
             <p class="mt-6 leading-relaxed text-gray-700">
               Il y a plus d’un an, l’IA a débarqué, mais les outils d’alors étaient décevants : impossibles à monétiser, sauf avec l’OFM IA, qui était un cauchemar – complexe, risqué, avec du vol de contenu et une IA inefficace. Monétiser sur Instagram ? Un enfer, avec des procès en France qui ont condamné plusieurs personnes. Mais tout a basculé avec les nouveaux outils IA : vidéos réalistes avec chorégraphies, playback, et transformations en personnages hyperréalistes. Fini les désavantages de l’OFM IA – plus de vol, juste du contenu viral, convaincant, et monétisable. Et ce n’est pas tout : l’IA est devenue si puissante qu’elle ouvre des portes inédites : OFM, marketing digital, monétisation TikTok… des revenus à portée de main !
             </p>
@@ -83,10 +87,8 @@
             <div class="mt-6 flex items-center gap-3">
               <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.04] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Je veux passer à l'action">
                 Je veux commencer maintenant
-              </a></div>
-          </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Votre parcours CashKing AI" class="w-full rounded-2xl shadow-xl shadow-blue-200/40" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -95,47 +97,67 @@
     <!-- ======================= Bénéfices / Modules ======================= -->
     <section id="benefits" class="scroll-mt-24 py-16 md:py-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8] text-center">Pourquoi CashKing AI est votre ticket vers la liberté</h2>
-        <p class="mt-3 text-center text-[#1D4ED8]">Passez de 0 à 5000 €/mois en 60 jours avec des outils IA simples.</p>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8] text-center">Ce qui est inclus dans CashKing AI</h2>
+        <p class="mt-3 text-center text-[#1D4ED8]">3 systèmes inclus, prêts à l’emploi — <span class="font-semibold">valeur totale 1 291 €</span>.</p>
 
-        <!-- Cartes -->
-        <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Module 1 -->
+        <!-- Pack cards -->
+        <div class="mt-10 grid md:grid-cols-3 gap-6">
+          <!-- OFM CashPro -->
           <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
-            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">1</div>
-            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 1 : Maîtrisez l’IA sans jargon</h3>
-            <p class="mt-2 text-gray-700">Comprenez et utilisez l’IA dès le jour 1 avec des tutos ultra concrets. Zéro théorie inutile.</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-[#EC4899]/10 text-[#EC4899]">Inclus</span>
+              <span class="text-sm font-bold text-[#22D3EE]">Valeur 497 €</span>
+            </div>
+            <h3 class="mt-4 font-bold text-xl text-[#1D4ED8]">OFM CashPro</h3>
+            <p class="mt-2 text-gray-700">L’OFM IA, le moyen le plus rapide de gagner 5000 euros par mois en 2025 avec les nouveaux outils d’IA révolutionnaires. La meilleure formation du marché français.</p>
+            <ul class="mt-4 space-y-2 text-gray-700 text-sm">
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> 2h de travail par jour</li>
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> Hyper Scalable</li>
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> Accompagnement de A à Z</li>
+            </ul>
           </div>
-          <!-- Module 2 -->
+
+          <!-- MDAI Pro -->
           <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
-            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">2</div>
-            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 2 : Créez des vidéos IA qui vendent</h3>
-            <p class="mt-2 text-gray-700">De l’idée au post viral : chorégraphies, playback, avatars IA hyperréalistes qui captent l’attention.</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-[#EC4899]/10 text-[#EC4899]">Inclus</span>
+              <span class="text-sm font-bold text-[#22D3EE]">Valeur 497 €</span>
+            </div>
+            <h3 class="mt-4 font-bold text-xl text-[#1D4ED8]">MDAI Pro (Marketing Digital)</h3>
+            <p class="mt-2 text-gray-700">Apprends à vendre Ton produit ou celui d'un autre, grâce au marketing digital et l'affiliation et Encaisse directement sur ton compte en banque !</p>
+            <ul class="mt-4 space-y-2 text-gray-700 text-sm">
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> Commence à vendre dès le jour 1</li>
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> Revenu Exponentiel</li>
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> Accompagnement de A à Z</li>
+            </ul>
           </div>
-          <!-- Module 3 -->
+
+          <!-- TikTok Cash -->
           <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
-            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">3</div>
-            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 3 : Monétisez avec CashKing AI et affiliation</h3>
-            <p class="mt-2 text-gray-700">Stratégies prêtes à l’emploi : offres, scripts, pages et placements qui convertissent.</p>
-          </div>
-          <!-- Module 4 -->
-          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB]">
-            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">4</div>
-            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Module 4 : Automatisez vos revenus 24/7</h3>
-            <p class="mt-2 text-gray-700">Systèmes simples : planification, auto-DM, réutilisation multi-plateformes pour des revenus en continu.</p>
-          </div>
-          <!-- Bonus -->
-          <div class="p-6 rounded-2xl bg-white shadow-lg shadow-blue-100/60 border border-[#E5E7EB] sm:col-span-2 lg:col-span-1">
-            <div class="w-10 h-10 rounded-xl bg-[#1D4ED8] text-white grid place-items-center">★</div>
-            <h3 class="mt-4 font-bold text-lg text-[#1D4ED8]">Bonus : Templates vidéo IA + coaching live (limité)</h3>
-            <p class="mt-2 text-gray-700">Copiez-collez nos meilleurs modèles et bénéficiez de sessions live pour accélérer vos résultats.</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-[#EC4899]/10 text-[#EC4899]">Inclus</span>
+              <span class="text-sm font-bold text-[#22D3EE]">Valeur 297 €</span>
+            </div>
+            <h3 class="mt-4 font-bold text-xl text-[#1D4ED8]">TikTok Cash</h3>
+            <p class="mt-2 text-gray-700">Une opportunité unique pour générer un revenu stable à long terme. Grâce à l’IA, crée du contenu sans montrer ton visage et maîtrise les clés pour atteindre 3 000 €/mois</p>
+            <ul class="mt-4 space-y-2 text-gray-700 text-sm">
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> 2h de travail par jour</li>
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> En restant anonyme</li>
+              <li class="flex gap-2"><span class="text-[#22D3EE]">✔</span> Accompagnement de A à Z</li>
+            </ul>
           </div>
         </div>
 
-        <!-- CTA secondaire sous bénéfices -->
+        <!-- Value anchor + CTA -->
         <div class="mt-10 text-center">
-          <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Je profite de l'offre CashKing AI">
-            Je profite de l’offre maintenant
+          <p class="text-sm text-gray-600">Valeur totale <span class="font-bold">1 291 €</span> — aujourd’hui seulement <span class="font-extrabold text-[#22D3EE]">147 €</span> <span class="line-through text-gray-400 ml-2">297 €</span>
+            <span class="ml-3 inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-[#1D4ED8]/10 text-[#1D4ED8]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm.75 5a.75.75 0 00-1.5 0v5c0 .2.08.39.22.53l3 3a.75.75 0 001.06-1.06l-2.78-2.78V7z"/></svg>
+              <span>Expire dans&nbsp;<span id="mini-countdown" aria-live="polite">—</span></span>
+            </span>
+          </p>
+          <a href="#offer" class="mt-4 inline-flex min-h-[44px] items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Accéder à la formation complète">
+            Accéder à tout (CashKing AI)
           </a>
         </div>
       </div>
@@ -145,21 +167,61 @@
     <section id="testimonials" class="scroll-mt-24 py-16 md:py-24 bg-[#E5E7EB]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8] text-center">Ils ont réussi avec CashKing AI</h2>
+
+        <!-- Cartes témoignages avec dashboard -->
         <div class="mt-10 grid md:grid-cols-3 gap-6">
-          <!-- Carte 1 -->
-          <figure class="p-6 bg-white rounded-2xl shadow-lg border border-[#E5E7EB]">
-            <img src="https://via.placeholder.com/100x100" alt="Photo de Sarah" class="w-16 h-16 rounded-full" />
-            <blockquote class="mt-4 text-gray-700">« Sarah, 34 ans : 3000 € en 45 jours avec des vidéos IA. »</blockquote>
+          <!-- Témoignage 1 -->
+          <figure class="group relative overflow-hidden rounded-2xl bg-white shadow-lg border border-[#E5E7EB]">
+            <div class="relative w-full overflow-hidden h-64 md:h-72 lg:h-80">
+              <a href="https://imgbb.com/" target="_blank" rel="noopener"><img src="https://i.ibb.co/vW2pxgT/IMG-0290.jpg" alt="IMG-0290" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async" /></a>
+              
+            </div>
+            <figcaption class="p-6">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1D4ED8]/10 text-[#1D4ED8] font-bold">S</div>
+                <div class="text-sm">
+                  <p class="font-semibold text-[#1D4ED8]">Sarah</p>
+                  
+                </div>
+              </div>
+              <blockquote class="mt-4 text-gray-700">« Je me suis concentré sur l'affiliation, j'ai fais ma première vente en 8 jours puis les résultat on pas cesser d'augmenter ! merci infiniment  &lt;3 »</blockquote>
+            </figcaption>
           </figure>
-          <!-- Carte 2 -->
-          <figure class="p-6 bg-white rounded-2xl shadow-lg border border-[#E5E7EB]">
-            <img src="https://via.placeholder.com/100x100" alt="Photo de Mehdi" class="w-16 h-16 rounded-full" />
-            <blockquote class="mt-4 text-gray-700">« Mehdi, 28 ans : 500 € en 60 jours avec des packages IA. »</blockquote>
+
+          <!-- Témoignage 2 -->
+          <figure class="group relative overflow-hidden rounded-2xl bg-white shadow-lg border border-[#E5E7EB]">
+            <div class="relative w-full overflow-hidden h-80 md:h-96 lg:h-[26rem]">
+              <a href="https://ibb.co/b5pRFN5v" target="_blank" rel="noopener"><img src="https://i.ibb.co/v42vhL4d/IMG-0293.jpg" alt="IMG-0293" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async" /></a>
+              
+            </div>
+            <figcaption class="p-6">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1D4ED8]/10 text-[#1D4ED8] font-bold">M</div>
+                <div class="text-sm">
+                  <p class="font-semibold text-[#1D4ED8]">Mehdi</p>
+                  
+                </div>
+              </div>
+              <blockquote class="mt-4 text-gray-700">« juste incroyable MERCI ! »</blockquote>
+            </figcaption>
           </figure>
-          <!-- Carte 3 -->
-          <figure class="p-6 bg-white rounded-2xl shadow-lg border border-[#E5E7EB]">
-            <img src="https://via.placeholder.com/100x100" alt="Photo de Camille" class="w-16 h-16 rounded-full" />
-            <blockquote class="mt-4 text-gray-700">« Camille, 41 ans : Revenus passifs 24/7. »</blockquote>
+
+          <!-- Témoignage 3 -->
+          <figure class="group relative overflow-hidden rounded-2xl bg-white shadow-lg border border-[#E5E7EB]">
+            <div class="relative w-full overflow-hidden h-80 md:h-96 lg:h-[26rem]">
+              <a href="https://imgbb.com/" target="_blank" rel="noopener"><img src="https://i.ibb.co/Ktd5HCQ/IMG-0280.jpg" alt="IMG-0280" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async" /></a>
+              
+            </div>
+            <figcaption class="p-6">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1D4ED8]/10 text-[#1D4ED8] font-bold">C</div>
+                <div class="text-sm">
+                  <p class="font-semibold text-[#1D4ED8]">Camille</p>
+                  
+                </div>
+              </div>
+              <blockquote class="mt-4 text-gray-700">« J'étais hyper septique, mais les outils d'IA sont vraiment incroyable je suis devenu viral super vite, après j'ai pu monétisé ! 1000 euros en même pas 3 semaines »</blockquote>
+            </figcaption>
           </figure>
         </div>
 
@@ -168,6 +230,7 @@
           <a href="#offer" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Rejoindre maintenant après lecture des témoignages">
             Rejoindre CashKing AI maintenant
           </a>
+          <p class="mt-4 text-xs text-gray-500">Exemples réels fournis par nos clients. Les résultats varient selon le contexte et l'effort fourni. Aucune promesse de gain.</p>
         </div>
       </div>
     </section>
@@ -175,52 +238,78 @@
     <!-- ======================= Offre ======================= -->
     <section id="offer" class="scroll-mt-24 py-16 md:py-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-8 items-start">
-          <div class="p-8 rounded-3xl bg-white shadow-2xl shadow-blue-200/50 border border-[#E5E7EB]">
-            <h2 class="text-2xl md:text-4xl font-extrabold text-[#1D4ED8]">Devenez libre financièrement avec CashKing AI !</h2>
-            <p class="mt-4 text-gray-700">Prix normal <span class="line-through">297 €</span>, <span class="font-bold text-[#1D4ED8]">offre spéciale 147 €</span> (–50 %, valable toute l’année avec urgence quotidienne). Possibilité de paiement en <span class="font-semibold">3 × 49 €</span>.</p>
+        <div class="grid lg:grid-cols-1 gap-8 place-items-center">
 
-            <!-- Compte à rebours -->
-            <div class="mt-6 p-5 rounded-2xl bg-[#E5E7EB] border border-[#E5E7EB]">
-              <div class="flex items-center justify-between gap-4">
-                <div>
-                  <p class="text-sm text-gray-600">Temps restant aujourd’hui</p>
-                  <p id="countdown" class="mt-1 text-2xl md:text-3xl font-extrabold text-[#1D4ED8]" aria-live="polite">—</p>
+          <!-- CARD BOOST CONVERSION -->
+          <div class="relative w-full max-w-3xl">
+            <!-- Glow border -->
+            <div class="absolute -inset-1 rounded-[28px] bg-gradient-to-r from-[#EC4899] via-[#1D4ED8] to-[#22D3EE] opacity-30 blur-lg"></div>
+            <div class="relative rounded-[28px] bg-gradient-to-r from-[#EC4899] via-[#1D4ED8] to-[#22D3EE] p-[1px]">
+              <div class="rounded-[26px] bg-white p-8 md:p-10">
+
+                <!-- Badges -->
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                  <span class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-[#EC4899]/10 text-[#EC4899]">-50% aujourd'hui</span>
+                  <span class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-[#1D4ED8]/10 text-[#1D4ED8]">Accès immédiat</span>
+                  <span class="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full bg-[#22D3EE]/10 text-[#1D4ED8]">Garantie 30 jours</span>
                 </div>
-                <div class="hidden sm:block w-px h-12 bg-[#E5E7EB]" aria-hidden="true"></div>
-                <div class="flex-1">
-                  <p class="text-sm text-gray-600">Offre actuelle</p>
-                  <p class="mt-1 text-3xl font-extrabold text-[#22D3EE]">147 €</p>
+
+                <h2 class="mt-6 text-center text-2xl md:text-4xl font-extrabold text-[#1D4ED8]">Devenez libre financièrement avec CashKing AI !</h2>
+
+                <!-- Pricing block -->
+                <div class="mt-6 grid md:grid-cols-2 gap-6 items-center">
+                  <div class="text-center">
+                    <div class="flex items-end justify-center gap-3">
+                      <div class="text-5xl md:text-6xl font-extrabold tracking-tight text-[#22D3EE]">147 €</div>
+                      <div class="flex flex-col items-center">
+                        <span class="text-gray-400 line-through text-lg md:text-xl">297 €</span>
+                        <span class="text-sm text-gray-600">ou 3 × <span class="font-semibold">49 €</span></span>
+                      </div>
+                    </div>
+                    <p class="mt-3 text-sm text-gray-700">Prix normal <span class="line-through">297 €</span>, <span class="font-bold text-[#1D4ED8]">offre spéciale 147 €</span> (–50 %, aujourd'hui seulement). Possibilité de paiement en <span class="font-semibold">3 × 49 €</span>.</p>
+                  </div>
+
+                  <!-- Countdown block (stylé) -->
+                  <div class="">
+                    <div class="rounded-2xl border border-[#E5E7EB] bg-[#F6F7FB] p-4">
+                      <p class="text-sm text-gray-600 text-center">Expire aujourd’hui</p>
+                      <div id="countdown" class="mt-2 text-center font-mono text-2xl md:text-3xl font-extrabold tracking-wider px-4 py-3 rounded-xl bg-white border border-[#E5E7EB]">—</div>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Value bullets (rassurance) -->
+                <ul class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-gray-700 text-center">
+                  <li class="flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-[#22D3EE]"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.415l-7.25 7.25a1 1 0 01-1.414 0L3.296 9.21a1 1 0 111.414-1.414l3.024 3.023 6.543-6.543a1 1 0 011.427.014z" clip-rule="evenodd"/></svg> Paiement en 3× 49 €</li>
+                  <li class="flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-[#22D3EE]"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.415l-7.25 7.25a1 1 0 01-1.414 0L3.296 9.21a1 1 0 111.414-1.414l3.024 3.023 6.543-6.543a1 1 0 011.427.014z" clip-rule="evenodd"/></svg> Accès immédiat à la formation</li>
+                  <li class="flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-[#22D3EE]"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.415l-7.25 7.25a1 1 0 01-1.414 0L3.296 9.21a1 1 0 111.414-1.414l3.024 3.023 6.543-6.543a1 1 0 011.427.014z" clip-rule="evenodd"/></svg> Garantie 30 jours</li>
+                </ul>
+
+                <!-- CTAs -->
+                <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+                  <a href="#" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg shadow-pink-200/60 hover:scale-[1.03] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Inscrivez-vous maintenant">
+                    Inscrivez-vous maintenant !
+                  </a>
+                  <a href="#" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl border border-[#E5E7EB] bg-white hover:bg-[#F9FAFB] text-[#1D4ED8] font-semibold shadow hover:scale-[1.02] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-blue-200" aria-label="Choisir le paiement en 3 fois">
+                    Payer en 3 × 49 €
+                  </a>
+                </div>
+
+                <!-- Trust row -->
+                <div class="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-500">
+                  <span class="inline-flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 1.5l8.485 4.9v9.2L12 20.5l-8.485-4.9v-9.2L12 1.5z"/></svg> Paiement sécurisé</span>
+                  <span>•</span>
+                  <span class="inline-flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 4.5a7.5 7.5 0 100 15 7.5 7.5 0 000-15zm-.75 3a.75.75 0 011.5 0v4.19l2.72 2.72a.75.75 0 11-1.06 1.06l-3-3A.75.75 0 0111.25 12V7.5z"/></svg> Accès immédiat</span>
+                  <span>•</span>
+                  <span class="inline-flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 6H8v8h8V9h-3V8z"/></svg> Garantie 30 jours</span>
+                </div>
+
+                <p class="mt-4 text-center text-sm text-gray-600">Garantie 30 jours satisfait ou remboursé. Les résultats dépendent de votre engagement.</p>
               </div>
             </div>
-
-            <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <a href="#" class="min-h-[44px] inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Inscrivez-vous maintenant">
-                Inscrivez-vous maintenant !
-              </a></div>
-
-            <p class="mt-4 text-sm text-gray-600">Garantie 30 jours satisfait ou remboursé. Les résultats dépendent de votre engagement.</p>
           </div>
+          <!-- /CARD -->
 
-          <!-- Liste récapitulatif / Ce que vous recevez -->
-          <div class="p-8 rounded-3xl bg-white shadow-2xl shadow-blue-200/50 border border-[#E5E7EB]">
-            <h3 class="text-xl md:text-2xl font-bold text-[#1D4ED8]">Tout ce que vous recevez :</h3>
-            <ul class="mt-4 space-y-3 text-gray-700">
-              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Accès complet aux 4 modules vidéo (mises à jour incluses).</li>
-              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Fiches actions prêtes à l’emploi (checklists & scripts).</li>
-              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Templates de vidéos IA (hook, scène, CTA).</li>
-              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Accès au coaching live (places limitées).</li>
-              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Accès privé à la communauté CashKing AI.</li>
-              <li class="flex items-start gap-3"><span class="mt-1 text-[#22D3EE]">✔</span> Bonus & nouvelles stratégies IA au fil de l’année.</li>
-            </ul>
-
-            <div class="mt-8">
-              <a href="#" class="min-h-[44px] w-full inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-[#EC4899] hover:bg-[#DB2777] text-white font-semibold shadow-lg hover:scale-[1.05] active:scale-[0.98] transition-transform focus:outline-none focus:ring-4 focus:ring-pink-300" role="button" aria-label="Je prends ma place maintenant">
-                Je prends ma place maintenant
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -230,50 +319,70 @@
   <footer class="py-10 border-t border-[#E5E7EB] bg-white" role="contentinfo">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
       <p class="text-sm text-gray-600">© 2025 CashKing AI. Tous droits réservés.</p>
-      
     </div>
   </footer>
 
   <!-- ======================= Scripts ======================= -->
   <script>
-    // -- Bannière : insérer la date du jour dans le texte --
-    (function(){
-      var d=new Date();
-      var dd=('0'+d.getDate()).slice(-2);
-      var mm=('0'+(d.getMonth()+1)).slice(-2);
-      var yyyy=d.getFullYear();
-      var el=document.getElementById('banner-date');
-      if(el){ el.textContent = dd+'/'+mm+'/'+yyyy; }
-    })();
-    // --- Compte à rebours (spécifique au 04/09/2025 23:59:00 CEST) ---
-    // fournie dans la consigne utilisateur
-    function updateCountdown() {
-      const deadline = new Date("September 04, 2025 23:59:00").getTime();
-      const now = new Date().getTime();
-      const distance = deadline - now;
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      const el = document.getElementById("countdown");
-      if (!el) return;
-      if (distance >= 0) {
-        el.textContent = `${hours}h ${minutes}m ${seconds}s`;
-      } else {
-        clearInterval(countdownInterval);
-        el.textContent = "Offre expirée — prochaine remise à minuit !";
+    // --------- Urgence quotidienne (deadline locale 23:59, reset auto) ----------
+    (function() {
+      function getDailyDeadline() {
+        const now = new Date();
+        const dl = new Date(now);
+        dl.setHours(23, 59, 0, 0);
+        if (dl.getTime() <= now.getTime()) {
+          dl.setDate(dl.getDate() + 1); // si passé, bascule à demain 23:59
+        }
+        return dl;
       }
-    }
-    const countdownInterval = setInterval(updateCountdown, 1000);
-    updateCountdown();
-  </script>
-  <script>
-    // Ensure fresh fetch (cache-bust) of external logo; fallback to inline if blocked
+      function fmtDate(d) {
+        const dd = String(d.getDate()).padStart(2,'0');
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const yyyy = d.getFullYear();
+        return `${dd}/${mm}/${yyyy}`;
+      }
+
+      let deadline = getDailyDeadline();
+
+      function paintBannerDate() {
+        const el = document.getElementById('banner-date');
+        if (el) el.textContent = fmtDate(deadline);
+      }
+
+      function tick() {
+        const now = new Date();
+        if (now >= deadline) {
+          // Reset quotidien
+          deadline = getDailyDeadline();
+          paintBannerDate();
+        }
+        const ms = Math.max(deadline - now, 0);
+        const hours   = Math.floor((ms % (1000*60*60*24)) / (1000*60*60));
+        const minutes = Math.floor((ms % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((ms % (1000*60)) / 1000);
+        const out = `${hours}h ${minutes}m ${seconds}s`;
+
+        const main = document.getElementById('countdown');
+        if (main) main.textContent = out;
+
+        const mini = document.getElementById('mini-countdown');
+        if (mini) mini.textContent = out;
+      }
+
+      paintBannerDate();
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    // -- Cache-busting du logo externe (fallback inline déjà géré via onerror) --
     (function(){
-      var el=document.getElementById('brand-logo');
+      var el = document.getElementById('brand-logo');
       if(!el) return;
-      var u=new URL(el.src, window.location.href);
-      u.searchParams.set('ts', Date.now());
-      el.src = u.toString();
+      try {
+        var u = new URL(el.src, window.location.href);
+        u.searchParams.set('ts', Date.now());
+        el.src = u.toString();
+      } catch(e) {}
     })();
   </script>
 </body>
